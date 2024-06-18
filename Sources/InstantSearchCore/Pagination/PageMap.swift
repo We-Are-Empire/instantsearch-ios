@@ -81,11 +81,11 @@ struct PageMap<Item> {
 
 // MARK: SequenceType
 
-extension PageMap: Sequence {
-  public func makeIterator() -> IndexingIterator<PageMap> {
-    return IndexingIterator(_elements: self)
-  }
-}
+// extension PageMap: Sequence {
+//   public func makeIterator() -> IndexingIterator<PageMap> {
+//     return IndexingIterator(_elements: self)
+//   }
+// }
 
 // MARK: CollectionType
 
@@ -203,4 +203,21 @@ extension PageMap {
       storage.removeValue(forKey: pageIndex)
     }
   }
+}
+
+extension PageMap: IteratorProtocol {
+    typealias Element = Item
+   
+    mutating func next() -> Item? {
+        guard let index = latestPageIndex else { return nil }
+        return page(atIndex: index)?.items.first
+    }
+}
+
+extension PageMap: Collection {
+    subscript(position: Int) -> Item {
+        get {
+            return page(atIndex: position)!.items.first!
+        }
+    }
 }
